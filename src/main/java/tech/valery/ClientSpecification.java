@@ -4,10 +4,10 @@ import java.util.Date;
 import java.util.Map;
 
 public class ClientSpecification {
-    private final String firstName;
-    private final String lastName;
+    public final String firstName;
+    public final String lastName;
 
-    private final Date birthDate;
+    public final Date birthDate;
 
     public ClientSpecification(String firstName, String lastName, Date birthDate) {
         this.firstName = firstName;

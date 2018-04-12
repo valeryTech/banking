@@ -9,6 +9,18 @@ public class Client {
 
     private int id;
 
+    public Client(ClientSpecification spec) {
+        this.firstName = spec.firstName;
+        this.lastName = spec.lastName;
+        this.birthDate = spec.birthDate;
+
+        id = idCounter.getAndIncrement();
+    }
+
+    public int getId() {
+        return id;
+    }
+
     private String firstName;
     private String lastName;
 
@@ -18,7 +30,7 @@ public class Client {
     public Client(String firstName, String lastName, Date birthDate) {
         this.birthDate = birthDate;
 
-        id = idCounter.addAndGet(1);
+        id = idCounter.getAndIncrement();
 
         this.firstName = firstName;
         this.lastName = lastName;
