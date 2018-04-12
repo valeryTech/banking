@@ -2,21 +2,19 @@ package tech.valery;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
-
-import java.util.Date;
+import tech.valery.simsystem.Person;
 
 public class BranchTest {
     @Test
-    public void ShouldReturnClient_WhenThatClientIsAdded(){
+    public void ShouldHandleRequest_WhenTaskIsRegistered(){
+        Branch branch = new Branch();
 
-        Branch branch = new Branch(new ConcurrentClientRepository());
+        Person person = new Person();
+        ClientRequest clientRequest = new ClientRequest(person, 100000, 24);
 
-        Client client = new Client("A", "A", new Date(1));
+        branch.handleRequest(clientRequest);
 
-        branch.registerClient(client);
-        Client findedClient = branch.findClient(client.getId());
+        Assertions.assertTrue(branch.getHandledRequests().contains(clientRequest));
 
-        //todo assertequals in spec
-        Assertions.assertTrue(findedClient.equals(client));
     }
 }

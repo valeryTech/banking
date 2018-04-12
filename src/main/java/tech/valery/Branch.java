@@ -1,20 +1,20 @@
 package tech.valery;
 
-import java.util.Date;
+import tech.valery.simsystem.Person;
+
+import java.nio.file.Files;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Branch {
 
-    private ClientRepository dataProvider;
+    private List<ClientRequest> processedRequests = new ArrayList<>();
 
-    public void registerClient(Client client) {
-        dataProvider.registerClient(client);
+    public void handleRequest(ClientRequest clientRequest) {
+        processedRequests.add(clientRequest);
     }
 
-    public Branch(ClientRepository dataProvider) {
-        this.dataProvider = dataProvider;
-    }
-
-    public Client findClient(int id) {
-        return dataProvider.getClient(id);
+    public List<ClientRequest> getHandledRequests() {
+        return processedRequests;
     }
 }
