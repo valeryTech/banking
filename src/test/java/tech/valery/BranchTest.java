@@ -6,15 +6,14 @@ import tech.valery.simsystem.Person;
 
 public class BranchTest {
     @Test
-    public void ShouldHandleRequest_WhenTaskIsRegistered(){
-        Branch branch = new Branch();
+    public void ShouldHandleRequest_WhenTaskIsRegistered() {
+        Branch branch = new Branch(1);
 
         Person person = new Person();
         ClientRequest clientRequest = new ClientRequest(person, 100000, 24);
 
         branch.handleRequest(clientRequest);
 
-        Assertions.assertTrue(branch.getHandledRequests().contains(clientRequest));
-
+        Assertions.assertTrue(branch.isRequestIsProcessed(clientRequest));
     }
 }

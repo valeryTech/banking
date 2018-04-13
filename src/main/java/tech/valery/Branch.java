@@ -12,25 +12,31 @@ import java.util.concurrent.Future;
 
 public class Branch {
 
-    private List<ClientRequest> processedRequests = new ArrayList<>();
+    private final List<ClientRequest> processedRequests = new ArrayList<>();
 
-    private static final int MANAGERS_NUMBER = 10;
+    private final ExecutorService fixedThreadPool;
 
-    ExecutorService fixedThreadPool = Executors.newFixedThreadPool(MANAGERS_NUMBER);
+    /**
+     * Creates Branch with fixed number of managers
+     *
+     * @param managersNumber Managers works in the Branch
+     */
+    public Branch(int managersNumber) {
+        fixedThreadPool = Executors.newFixedThreadPool(managersNumber);
+    }
 
     public void handleRequest(ClientRequest clientRequest) {
-
-        Future<Response> f =  fixedThreadPool.submit(new RequestExecutor(clientRequest));
+        Future<Response> f = fixedThreadPool.submit(new RequestExecutor(clientRequest));
 
         try {
             Response r = f.get();
             processedRequests.add(clientRequest);
-        }catch (InterruptedException | ExecutionException e) {
+        } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
     }
 
-    public List<ClientRequest> getHandledRequests() {
-        return processedRequests;
+    public boolean isRequestIsProcessed(ClientRequest request) {
+        return processedRequests.contains(request);
     }
 }
