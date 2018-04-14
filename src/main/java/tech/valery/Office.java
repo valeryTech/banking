@@ -10,18 +10,18 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 
-public class Branch {
+public class Office {
 
     private final List<ClientRequest> processedRequests = new ArrayList<>();
 
     private final ExecutorService fixedThreadPool;
 
     /**
-     * Creates Branch with fixed number of managers
+     * Creates Office with fixed number of managers
      *
-     * @param managersNumber Managers works in the Branch
+     * @param managersNumber Managers works in the Office
      */
-    public Branch(int managersNumber) {
+    public Office(int managersNumber) {
         fixedThreadPool = Executors.newFixedThreadPool(managersNumber);
     }
 
