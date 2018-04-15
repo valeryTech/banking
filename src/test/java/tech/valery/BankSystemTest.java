@@ -13,7 +13,7 @@ public class BankSystemTest {
 
         BankSystem bankSystem = new BankSystem(new ConcurrentClientRepository());
 
-        Client client = new Client("A", "A", new Date(1));
+        Client client = new Client("A", "A", 20, "1100 0000");
 
         bankSystem.registerClient(client);
         Client findedClient = bankSystem.findClient(client.getId());

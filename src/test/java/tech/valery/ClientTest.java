@@ -12,13 +12,13 @@ public class ClientTest {
 
     @Test
     public void ShouldReturnFullNameInOneString_WhenIsAcquired(){
-        Client client = new Client("John", "Doe", new Date());
+        Client client = new Client("John", "Doe", 20, "1100 0000");
         assertEquals("John Doe", client.getName());
     }
 
     @Test
     public void ShouldGetSpecification(){
-        Client client = new Client("John", "Doe", new Date(100));
-        assertThat(new ClientSpecification("John", "Doe", new Date(100))).isEqualToComparingFieldByField(client.getSpecification());
+        Client client = new Client("John", "Doe", 20, "1100 0000");
+        assertThat(new ClientSpecification("John", "Doe", 20, "1100 0000")).isEqualToComparingFieldByField(client.getSpecification());
     }
 }

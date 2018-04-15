@@ -4,11 +4,10 @@ import tech.valery.participants.PersonDTO;
 
 public class Person {
 
-    private int age;
-
     private final String lastName;
     private final String firstName;
     private final String middleName;
+    private final int age;
     private final String passportNumber;
     private final String salutation;
     private final String suffix;
@@ -26,7 +25,7 @@ public class Person {
             final String passportNumber,
             final String newSalutation,
             final String newSuffix,
-            int age,
+            final int age,
             final String newStreetAddress,
             final String newCity,
             final String newState,

@@ -12,7 +12,8 @@ public class Client {
     public Client(ClientSpecification spec) {
         this.firstName = spec.firstName;
         this.lastName = spec.lastName;
-        this.birthDate = spec.birthDate;
+        this.age = spec.age;
+        this.passportNumber = spec.passportNumber;
 
         id = idCounter.getAndIncrement();
     }
@@ -24,15 +25,20 @@ public class Client {
     private String firstName;
     private String lastName;
 
-    private Date birthDate;
+    private int age;
 
-    public Client(String firstName, String lastName, Date birthDate) {
-        this.birthDate = birthDate;
+    private final String passportNumber;
+
+    public Client(String firstName, String lastName, int age, String passportNumber) {
 
         id = idCounter.getAndIncrement();
 
         this.firstName = firstName;
         this.lastName = lastName;
+
+        this.age = age;
+
+        this.passportNumber = passportNumber;
     }
 
     public String getName() {
@@ -40,6 +46,6 @@ public class Client {
     }
 
     public ClientSpecification getSpecification() {
-        return new ClientSpecification(this.firstName, this.lastName, this.birthDate);
+        return new ClientSpecification(firstName, lastName, age, passportNumber);
     }
 }
