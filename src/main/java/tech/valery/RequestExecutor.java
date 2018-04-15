@@ -11,6 +11,17 @@ public class RequestExecutor implements Callable<Response> {
     }
 
     private Response handleRequest(){
+
+        //request type
+
+        //input data
+
+        //analysis
+
+        //output
+
+        //proceed to processing
+
         return new Response(clientRequest, true);
     }
 

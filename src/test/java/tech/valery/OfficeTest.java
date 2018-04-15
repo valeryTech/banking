@@ -9,7 +9,7 @@ public class OfficeTest {
     public void ShouldHandleRequest_WhenTaskIsRegistered() {
         Office office = new Office(1);
 
-        Person person = new Person();
+        Person person = new Person("John", "Doe", 20);
         ClientRequest clientRequest = new ClientRequest(person, 100000, 24);
 
         office.handleRequest(clientRequest);
