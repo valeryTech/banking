@@ -6,11 +6,14 @@ public class RequestExecutor implements Callable<Response> {
 
     private final ClientRequest clientRequest;
 
-    RequestExecutor(ClientRequest clientRequest) {
+    private final BankSystem bankSystem;
+
+    RequestExecutor(ClientRequest clientRequest, BankSystem bankSystem) {
         this.clientRequest = clientRequest;
+        this.bankSystem = bankSystem;
     }
 
-    private Response handleRequest(){
+    private Response handleCreditCardRequest(){
 
         //request type
 
@@ -18,9 +21,13 @@ public class RequestExecutor implements Callable<Response> {
 
         //analysis
 
-        //todo check doubles
 
+        //create clientSpecification
+        final ClientSpecification currentClientSpec = null;
 
+        Callable<Boolean> checkDoubles = () -> {
+            return !bankSystem.findClient(currentClientSpec).isPresent();
+        };
 
         //output
 
@@ -31,6 +38,6 @@ public class RequestExecutor implements Callable<Response> {
 
     @Override
     public Response call() throws Exception {
-        return handleRequest();
+        return handleCreditCardRequest();
     }
 }

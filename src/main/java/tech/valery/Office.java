@@ -1,8 +1,7 @@
 package tech.valery;
 
-import tech.valery.simsystem.Person;
+import tech.valery.simsystem.BankingSystem;
 
-import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
@@ -16,17 +15,20 @@ public class Office {
 
     private final ExecutorService fixedThreadPool;
 
+    private final BankSystem bankSystem;
+
     /**
      * Creates Office with fixed number of managers
      *
      * @param managersNumber Managers works in the Office
      */
-    public Office(int managersNumber) {
+    public Office(int managersNumber, BankSystem bankSystem) {
         fixedThreadPool = Executors.newFixedThreadPool(managersNumber);
+        this.bankSystem = bankSystem;
     }
 
     public void handleRequest(ClientRequest clientRequest) {
-        Future<Response> f = fixedThreadPool.submit(new RequestExecutor(clientRequest));
+        Future<Response> f = fixedThreadPool.submit(new RequestExecutor(clientRequest, bankSystem));
 
         try {
             Response r = f.get();
