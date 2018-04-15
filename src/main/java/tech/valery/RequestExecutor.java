@@ -18,6 +18,10 @@ public class RequestExecutor implements Callable<Response> {
 
         //analysis
 
+        //todo check doubles
+
+
+
         //output
 
         //proceed to processing

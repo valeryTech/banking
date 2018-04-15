@@ -18,7 +18,11 @@ public class CreditBureauTest {
         CreditBureau creditBureau = mock(CreditBureau.class);
         when(creditBureau.getCreditHistory(any(PersonDTO.class))).thenReturn(new CreditHistory(new BigDecimal(1000), true, 1));
 
-        Person person = new Person("Doe","John", 10);
+        Person person = new Person.PersonBuilder("John", "NY", "NY").lastName("Doe")
+                .age(20)
+                .isEmployed(true)
+                .isFemale(false)
+                .createPerson();
 
         CreditHistory actualCreditHistory = creditBureau.getCreditHistory(person.toDTO());
         CreditHistory expectedCreditHistory = new CreditHistory(new BigDecimal(1000), true, 1);

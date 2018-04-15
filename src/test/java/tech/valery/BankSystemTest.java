@@ -5,6 +5,8 @@ import org.junit.jupiter.api.Test;
 
 import java.util.Date;
 
+import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
+
 public class BankSystemTest {
     @Test
     public void ShouldReturnClient_WhenThatClientIsAdded(){
@@ -16,7 +18,6 @@ public class BankSystemTest {
         bankSystem.registerClient(client);
         Client findedClient = bankSystem.findClient(client.getId());
 
-        //todo assertequals in spec
-        Assertions.assertTrue(findedClient.equals(client));
+        assertThat(client).isEqualToComparingFieldByField(findedClient);
     }
 }

@@ -24,7 +24,6 @@ public class Client {
     private String firstName;
     private String lastName;
 
-    //todo create Builder pattern
     private Date birthDate;
 
     public Client(String firstName, String lastName, Date birthDate) {
