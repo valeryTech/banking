@@ -10,6 +10,27 @@ public class Person {
     private final int age;
     private final String passportNumber;
     private final String salutation;
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public String getMiddleName() {
+        return middleName;
+    }
+
+    public int getAge() {
+        return age;
+    }
+
+    public String getPassportNumber() {
+        return passportNumber;
+    }
+
     private final String suffix;
     private final String streetAddress;
     private final String city;
