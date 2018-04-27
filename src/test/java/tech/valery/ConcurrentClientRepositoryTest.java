@@ -17,12 +17,12 @@ public class ConcurrentClientRepositoryTest {
         clientRepository.registerClient(new Client("Johny", "Hue", 21, "2200 0010"));
         clientRepository.registerClient(new Client("Johny", "Hue", 20, "2200 0010"));
 
-        ClientSpecification findedSpecification =clientRepository.getClient(cs20).get().getSpecification();
+        ClientSpecification findedSpecification =clientRepository.getClient(cs20).getSpecification();
         assertThat(findedSpecification).isEqualToComparingFieldByField(cs20);
     }
 
     @Test
-    public void ShouldReturnNull_WhenClientBySpecIsNotInCollection(){
+    public void ShouldReturnOptionalOfNull_WhenClientBySpecIsNotInCollection(){
         ClientRepository clientRepository = new ConcurrentClientRepository();
 
         ClientSpecification cs23 = new ClientSpecification("Johny", "Hue", 23, "2200 0010");
@@ -31,6 +31,6 @@ public class ConcurrentClientRepositoryTest {
         clientRepository.registerClient(new Client("Johny", "Hue", 21, "2200 0010"));
 
 
-        Assertions.assertTrue(!clientRepository.getClient(cs23).isPresent());
+        Assertions.assertTrue(clientRepository.getClient(cs23) != null);
     }
 }

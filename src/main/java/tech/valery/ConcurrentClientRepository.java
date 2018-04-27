@@ -24,7 +24,7 @@ public class ConcurrentClientRepository implements ClientRepository {
     }
 
     @Override
-    public Optional<Client> getClient(ClientSpecification searchSpecification) {
+    public Client getClient(ClientSpecification searchSpecification) {
 
         BiFunction<ClientSpecification, ClientSpecification, Boolean> searchFunc = ClientSpecification.clientSpecEqualsPredicate;
 
@@ -32,6 +32,6 @@ public class ConcurrentClientRepository implements ClientRepository {
             return searchFunc.apply(currentClient.getSpecification(), searchSpecification) ? currentClient : null;
         });
 
-        return Optional.ofNullable(client);
+        return client;
     }
 }
