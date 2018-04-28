@@ -10,6 +10,10 @@ import tech.valery.extentions.MockitoExtension;
 import tech.valery.participants.AntiFraudService;
 import tech.valery.participants.CreditBureau;
 
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
+import java.util.concurrent.TimeUnit;
+
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.*;
 
@@ -17,19 +21,22 @@ import static org.mockito.Mockito.*;
 
 
 @ExtendWith(MockitoExtension.class)
-public class BankSystemTest {
+class BankSystemTest {
 
-    @Mock private static ClientRepository clientRepository;
-    @Mock private static AntiFraudService antiFraudService;
-    @Mock private static CreditBureau creditBureau;
+    @Mock
+    private static ClientRepository clientRepository;
+    @Mock
+    private static AntiFraudService antiFraudService;
+    @Mock
+    private static CreditBureau creditBureau;
 
     @BeforeAll
-    static void initAll(){
+    static void initAll() {
         MockitoAnnotations.initMocks(BankSystemTest.class);
     }
 
     @Test
-    public void ShouldReturnClient_WhenThatClientIsAdded(){
+    void ShouldReturnClient_WhenThatClientIsAdded() {
 
         //todo mock
         BankSystem bankSystem = new BankSystem(new ConcurrentClientRepository(), antiFraudService, creditBureau);
@@ -43,7 +50,7 @@ public class BankSystemTest {
     }
 
     @Test
-    void ShouldReturnFalse_WhenClientIsNotInBase(){
+    void ShouldReturnFalse_WhenClientIsNotInBase() {
         BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
 
         when(clientRepository.getClient(any(ClientSpecification.class))).thenReturn(null);
@@ -52,7 +59,7 @@ public class BankSystemTest {
     }
 
     @Test
-    void ShouldReturnTrue_WhenClientIsInBase(){
+    void ShouldReturnTrue_WhenClientIsInBase() {
         BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
 
         when(clientRepository.getClient(any(ClientSpecification.class))).thenReturn(mock(Client.class));
@@ -61,14 +68,44 @@ public class BankSystemTest {
     }
 
     @Test
-    void ShouldRecoverFalse_WhenTimeoutIsExceeded(){
+    void ShouldGetFalse_WhenTimeoutIsExceeded() {
+
+        when(clientRepository.getClient(any(ClientSpecification.class))).thenAnswer((invocation) -> {
+            Thread.currentThread().sleep(2000);
+            return mock(Client.class);
+        });
+
         BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
 
-        when(clientRepository.getClient(any(ClientSpecification.class))).thenReturn(mock(Client.class));
+        CompletableFuture<Boolean> doublesCheckFuture = CompletableFuture
+                .supplyAsync(() -> bankSystem.findClient(mock(ClientSpecification.class)) != null)
+                .completeOnTimeout(false, 1000, TimeUnit.MICROSECONDS);
 
-        Assertions.assertTrue(bankSystem.isClientAlreadyInBase(mock(ClientSpecification.class)));
+        Assertions.assertFalse(doublesCheckFuture.join());
+    }
 
-        //handling delay
+
+    @Test
+    void GivenFutureWithExceptionHandler_WhenExceptionIsRaised_ThenRespondIsRecoveredToFalse() {
+        when(clientRepository.getClient(any(ClientSpecification.class))).thenThrow(new IllegalStateException("404"));
+
+        BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
+
+        CompletableFuture<Boolean> doublesCheckFuture = new CompletableFuture<>();
+
+        CompletableFuture<Boolean> futureToHandle = doublesCheckFuture.supplyAsync(() -> {
+            Boolean result = null;
+            try {
+                result = bankSystem.findClient(mock(ClientSpecification.class)) != null;
+            } catch (Exception ex) {
+                doublesCheckFuture.completeExceptionally(ex);
+            }
+            return result;
+        });
+
+        CompletableFuture<Boolean> handledFuture = futureToHandle.handle((result, ex) -> result != null ? result : false);
+
+        Assertions.assertFalse(handledFuture.join());
     }
 
 }
