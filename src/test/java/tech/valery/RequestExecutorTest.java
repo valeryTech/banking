@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 import static org.mockito.Mockito.mock;
 
-public class RequestExecutorTest {
+class RequestExecutorTest {
 
     @Test
     void ShouldWait2Tasks_WhenRunInAsync(){
@@ -18,8 +18,6 @@ public class RequestExecutorTest {
         CreditBureau creditBureau = mock(CreditBureau.class);
         ClientRepository clientRepository = mock(ClientRepository.class);
 
-
-        // TODO: 4/26/18 add functionality
 
         BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
 

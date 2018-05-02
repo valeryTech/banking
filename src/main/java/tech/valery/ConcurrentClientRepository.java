@@ -6,7 +6,7 @@ import java.util.function.BiFunction;
 
 public class ConcurrentClientRepository implements ClientRepository {
 
-    private ConcurrentHashMap<Integer, Client> clients;
+    private final ConcurrentHashMap<Integer, Client> clients;
 
     public ConcurrentClientRepository() {
         clients = new ConcurrentHashMap<>();
@@ -28,10 +28,7 @@ public class ConcurrentClientRepository implements ClientRepository {
 
         BiFunction<ClientSpecification, ClientSpecification, Boolean> searchFunc = ClientSpecification.clientSpecEqualsPredicate;
 
-        Client client = clients.search(1, (k, currentClient) -> {
-            return searchFunc.apply(currentClient.getSpecification(), searchSpecification) ? currentClient : null;
-        });
-
-        return client;
+        return clients.search(1, (k, currentClient) ->
+                searchFunc.apply(currentClient.getSpecification(), searchSpecification) ? currentClient : null);
     }
 }

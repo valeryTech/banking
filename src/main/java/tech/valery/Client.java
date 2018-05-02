@@ -5,7 +5,7 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
 
-    private static AtomicInteger idCounter = new AtomicInteger();
+    private static final AtomicInteger idCounter = new AtomicInteger();
 
     private int id;
 
