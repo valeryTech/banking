@@ -10,10 +10,11 @@ import static org.mockito.Mockito.mock;
 
 public class OfficeTest {
     @Test
-    public void ShouldHandleRequest_WhenTaskIsRegistered() {
+    public void ShouldGetRequest_WhenPersonIsGoingRequestForCreditCard() {
+
         AntiFraudService antiFraudService = mock(AntiFraudService.class);
         CreditBureau creditBureau = mock(CreditBureau.class);
-        //todo mock
+
         BankSystem bankSystem = new BankSystem(new ConcurrentClientRepository(), antiFraudService, creditBureau);
 
         Office office = new Office(1, bankSystem);
@@ -23,10 +24,11 @@ public class OfficeTest {
                 .isEmployed(true)
                 .isFemale(false)
                 .createPerson();
+
         ClientRequest clientRequest = new ClientRequest(person, 100000, 24);
 
-        office.handleRequest(clientRequest);
+        office.requestForCreditCard(clientRequest);
 
-        Assertions.assertTrue(office.isRequestIsProcessed(clientRequest));
+        Assertions.assertTrue(office.isRequestProcessed(clientRequest));
     }
 }

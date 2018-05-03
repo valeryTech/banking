@@ -25,7 +25,7 @@ public class ConcurrentClientRepositoryTest {
     public void ShouldReturnOptionalOfNull_WhenClientBySpecIsNotInCollection(){
         ClientRepository clientRepository = new ConcurrentClientRepository();
 
-        ClientSpecification cs23 = new ClientSpecification("Johny", "Hue", 23, "2200 0010");
+        ClientSpecification cs23 = new ClientSpecification("Johny", "Hue", 20, "2200 0010");
 
         clientRepository.registerClient(new Client("Johny", "Hue", 20, "2200 0010"));
         clientRepository.registerClient(new Client("Johny", "Hue", 21, "2200 0010"));

@@ -31,33 +31,4 @@ class RequestExecutorTest {
         MockitoAnnotations.initMocks(BankSystemTest.class);
     }
 
-    @Test
-    void ShouldWait2Tasks_WhenRunInAsync(){
-
-        BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
-
-        ClientSpecification currentClientSpec = new ClientSpecification("Ivan", "Petrov", 23, "4400 125020");
-
-        CompletableFuture<Boolean> doublesCheckFuture = bankSystem.getClientDoubleStatusAsync(currentClientSpec);
-        CompletableFuture<Boolean> stopListCheckFuture = bankSystem.getStopListCheckAsync(currentClientSpec);
-        //job?
-
-        Boolean toContinue = !doublesCheckFuture.join() && stopListCheckFuture.join();
-
-        System.out.println(toContinue);
-
-//
-//        CompletableFuture<Boolean> antiFroudCheckFututre = CompletableFuture.supplyAsync(() -> bankSystem.checkForFraud(currentClientSpec));
-//
-//        CompletableFuture.allOf(doublesCheckFuture, stopListCheckFuture)
-//                .handle((f, t) -> {return null;})
-//                .thenApply((dumb) -> {
-//                    Boolean isDoubled = doublesCheckFuture.join();
-//                    Boolean isPermitted = stopListCheckFuture.join();
-//
-//                    return true;
-//                });
-    }
-
-
 }

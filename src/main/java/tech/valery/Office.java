@@ -1,6 +1,7 @@
 package tech.valery;
 
 import tech.valery.simsystem.BankingSystem;
+import tech.valery.simsystem.Person;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +28,7 @@ public class Office {
         this.bankSystem = bankSystem;
     }
 
-    public void handleRequest(ClientRequest clientRequest) {
+    public void requestForCreditCard(ClientRequest clientRequest) {
         Future<Response> f = fixedThreadPool.submit(new RequestExecutor(clientRequest, bankSystem));
 
         try {
@@ -38,7 +39,11 @@ public class Office {
         }
     }
 
-    public boolean isRequestIsProcessed(ClientRequest request) {
+    public boolean isRequestProcessed(ClientRequest request) {
         return processedRequests.contains(request);
+    }
+
+    public boolean clientHasCreditCard(Person person) {
+        return true;
     }
 }

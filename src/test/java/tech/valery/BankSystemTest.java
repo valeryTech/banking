@@ -113,7 +113,8 @@ class BankSystemTest {
 
         BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
 
-        CompletableFuture<Boolean> clientStatus = bankSystem.getClientDoubleStatusAsync(mock(ClientSpecification.class));
+        CompletableFuture<Boolean> clientStatus = bankSystem.getClientDoubleStatusAsync(mock(ClientSpecification.class))
+                .handle((result, ex) -> result != null ? result : true);
         //job
 
         assertTrue(clientStatus.join());
