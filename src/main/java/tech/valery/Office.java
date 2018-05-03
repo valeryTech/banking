@@ -1,6 +1,5 @@
 package tech.valery;
 
-import tech.valery.simsystem.BankingSystem;
 import tech.valery.simsystem.Person;
 
 import java.util.ArrayList;
@@ -29,10 +28,10 @@ public class Office {
     }
 
     public void requestForCreditCard(ClientRequest clientRequest) {
-        Future<Response> f = fixedThreadPool.submit(new RequestExecutor(clientRequest, bankSystem));
+        Future<Decision> decisionFuture = fixedThreadPool.submit(new RequestExecutor(clientRequest, bankSystem));
 
         try {
-            Response r = f.get();
+            Decision decision = decisionFuture.get();
             processedRequests.add(clientRequest);
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();

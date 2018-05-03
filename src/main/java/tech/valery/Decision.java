@@ -1,10 +1,10 @@
 package tech.valery;
 
-public class Response {
+public class Decision {
     private final ClientRequest clientRequest;
     private final boolean isPositiveDecision;
 
-    public Response(ClientRequest clientRequest, boolean isPositiveDecision) {
+    public Decision(ClientRequest clientRequest, boolean isPositiveDecision) {
         this.clientRequest = clientRequest;
         this.isPositiveDecision = isPositiveDecision;
     }

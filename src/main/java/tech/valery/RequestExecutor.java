@@ -10,7 +10,7 @@ import java.util.concurrent.TimeUnit;
 import static tech.valery.BankSystem.MAX_TIMEOUT;
 import static tech.valery.BankSystem.NEGATIVE_DOUBLE_CHECK_ANSWER;
 
-public class RequestExecutor implements Callable<Response> {
+public class RequestExecutor implements Callable<Decision> {
 
     private final ClientRequest clientRequest;
 
@@ -21,7 +21,7 @@ public class RequestExecutor implements Callable<Response> {
         this.bankSystem = bankSystem;
     }
 
-    private Response handleCreditCardRequest() {
+    private Decision handleCreditCardRequest() {
 
         //request type
 
@@ -47,9 +47,9 @@ public class RequestExecutor implements Callable<Response> {
         Boolean toContinue = !doublesCheckFuture.join() && stopListCheckFuture.join();
 
         //decision 1
-        final Response negativeResponse = new Response(clientRequest, false);
+        final Decision negativeDecision = new Decision(clientRequest, false);
         if (!toContinue) {
-            return negativeResponse;
+            return negativeDecision;
         }
 
         CompletableFuture<CreditHistory> creditHistoryFuture = bankSystem.getCreditHistoryAsync(currentClientSpec);
@@ -65,7 +65,7 @@ public class RequestExecutor implements Callable<Response> {
         Boolean isClientClearByAntiFraudService = antiFroudCheckFuture.join();
 
         if(!(isClientClearByAntiFraudService && isClientClearBySS)){
-            return negativeResponse;
+            return negativeDecision;
         }
 
 
@@ -73,11 +73,11 @@ public class RequestExecutor implements Callable<Response> {
 
         //proceed to processing
 
-        return new Response(clientRequest, true);
+        return new Decision(clientRequest, true);
     }
 
     @Override
-    public Response call() throws Exception {
+    public Decision call() throws Exception {
         return handleCreditCardRequest();
     }
 }
