@@ -1,6 +1,11 @@
 package tech.valery;
 
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
+import tech.valery.extentions.MockitoExtension;
 import tech.valery.participants.AntiFraudService;
 import tech.valery.participants.CreditBureau;
 
@@ -9,29 +14,35 @@ import java.util.function.Function;
 
 import static org.mockito.Mockito.mock;
 
+@ExtendWith(MockitoExtension.class)
 class RequestExecutorTest {
+
+    @Mock
+    private static ClientRepository clientRepository;
+
+    @Mock
+    private static AntiFraudService antiFraudService;
+
+    @Mock
+    private static CreditBureau creditBureau;
+
+    @BeforeAll
+    static void initAll() {
+        MockitoAnnotations.initMocks(BankSystemTest.class);
+    }
 
     @Test
     void ShouldWait2Tasks_WhenRunInAsync(){
 
-        AntiFraudService antiFraudService = mock(AntiFraudService.class);
-        CreditBureau creditBureau = mock(CreditBureau.class);
-        ClientRepository clientRepository = mock(ClientRepository.class);
-
-
         BankSystem bankSystem = new BankSystem(clientRepository, antiFraudService, creditBureau);
 
-        ClientSpecification currentClientSpec = new ClientSpecification("Ivan", "Petrov", 25, "4400 125020");
+        ClientSpecification currentClientSpec = new ClientSpecification("Ivan", "Petrov", 23, "4400 125020");
 
-        CompletableFuture<Boolean> doublesCheckFuture = CompletableFuture
-                .supplyAsync(() -> bankSystem.findClient(currentClientSpec) != null);
-
-        CompletableFuture<Boolean> stopListCheckFuture = CompletableFuture
-                .supplyAsync(() -> currentClientSpec.age > 24);
+        CompletableFuture<Boolean> doublesCheckFuture = bankSystem.getClientDoubleStatusAsync(currentClientSpec);
+        CompletableFuture<Boolean> stopListCheckFuture = bankSystem.getStopListCheckAsync(currentClientSpec);
+        //job?
 
         Boolean toContinue = !doublesCheckFuture.join() && stopListCheckFuture.join();
-
-        if(!toContinue)
 
         System.out.println(toContinue);
 
@@ -47,4 +58,6 @@ class RequestExecutorTest {
 //                    return true;
 //                });
     }
+
+
 }

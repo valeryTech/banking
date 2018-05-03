@@ -5,7 +5,10 @@ import tech.valery.simsystem.Person;
 
 import java.util.concurrent.Callable;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Function;
+import java.util.concurrent.TimeUnit;
+
+import static tech.valery.BankSystem.MAX_TIMEOUT;
+import static tech.valery.BankSystem.NEGATIVE_DOUBLE_CHECK_ANSWER;
 
 public class RequestExecutor implements Callable<Response> {
 
@@ -28,38 +31,43 @@ public class RequestExecutor implements Callable<Response> {
 
         Person person = clientRequest.person;
 
-        //create clientSpecification
         final ClientSpecification currentClientSpec = new ClientSpecification(person.getFirstName(),
                 person.getLastName(), person.getAge(), person.getPassportNumber());
 
-        Callable<Boolean> doublesCheck = () -> bankSystem.findClient(currentClientSpec) != null;
+        CompletableFuture<Boolean> doublesCheckFuture = bankSystem.getClientDoubleStatusAsync(currentClientSpec)
+                .handle((result, ex) -> result != null ? result : true)
+                .completeOnTimeout(NEGATIVE_DOUBLE_CHECK_ANSWER, MAX_TIMEOUT, TimeUnit.MILLISECONDS);
 
+        CompletableFuture<Boolean> stopListCheckFuture = bankSystem.getStopListCheckAsync(currentClientSpec)
+                .completeOnTimeout(false, MAX_TIMEOUT, TimeUnit.MILLISECONDS);
 
-        Callable<Boolean> fraudCheck = () -> bankSystem.checkForFraud(currentClientSpec);
+        CompletableFuture<Boolean> antiFroudCheckFuture = bankSystem.getAntifraudCheckAsync(currentClientSpec)
+                .completeOnTimeout(false, MAX_TIMEOUT, TimeUnit.MILLISECONDS);;
 
-        Callable<CreditHistory> getCreditHistory = () -> bankSystem.getCreditHistory(currentClientSpec);
+        Boolean toContinue = !doublesCheckFuture.join() && stopListCheckFuture.join();
 
+        //decision 1
+        final Response negativeResponse = new Response(clientRequest, false);
+        if (!toContinue) {
+            return negativeResponse;
+        }
 
-        CreditHistory creditHistory = null;
-        Callable<Boolean> checkInSB = () -> bankSystem.checkInSB(currentClientSpec, creditHistory);
+        CompletableFuture<CreditHistory> creditHistoryFuture = bankSystem.getCreditHistoryAsync(currentClientSpec);
+        //exceptions
 
-        Function<ClientSpecification, Boolean> stopListCheck = (spec) -> spec.age > 24;
+        CreditHistory creditHistory = creditHistoryFuture.join();
+        //decision 2
 
+        CompletableFuture<Boolean> sbCheckedFuture = bankSystem.checkInSBAsync(currentClientSpec, creditHistory);
 
-        CompletableFuture<Boolean> doublesCheckFuture = CompletableFuture.supplyAsync(() -> bankSystem.findClient(currentClientSpec) != null);
-        CompletableFuture<Boolean> stopListCheckFuture = CompletableFuture.supplyAsync(() -> stopListCheck.apply(currentClientSpec));
-        CompletableFuture<Boolean> antiFroudCheckFututre = CompletableFuture.supplyAsync(() -> bankSystem.checkForFraud(currentClientSpec));
+        // final check
+        Boolean isClientClearBySS = sbCheckedFuture.join();
+        Boolean isClientClearByAntiFraudService = antiFroudCheckFuture.join();
 
-        CompletableFuture.allOf(doublesCheckFuture, stopListCheckFuture)
-                .handle((f, t) -> {return null;})
-                .thenApply((dumb) -> {
-                    Boolean isDoubled = doublesCheckFuture.join();
-                    Boolean isPermitted = stopListCheckFuture.join();
+        if(!(isClientClearByAntiFraudService && isClientClearBySS)){
+            return negativeResponse;
+        }
 
-                    return true;
-                });
-
-        //decision
 
         //output
 

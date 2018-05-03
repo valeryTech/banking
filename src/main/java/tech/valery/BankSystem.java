@@ -1,12 +1,8 @@
 package tech.valery;
 
-import org.mockito.Mockito;
-import org.mockito.internal.stubbing.answers.AnswersWithDelay;
 import tech.valery.participants.*;
 
-import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.TimeUnit;
 
 import static org.mockito.Mockito.mock;
 
@@ -54,23 +50,33 @@ public class BankSystem {
                 doublesCheckFuture.completeExceptionally(ex);
             }
             return result;
-        })
-                .handle((result, ex) -> result != null ? result : true)
-                .completeOnTimeout(NEGATIVE_DOUBLE_CHECK_ANSWER, MAX_TIMEOUT, TimeUnit.MILLISECONDS);
+        });
 
         return clientDoubleStatusFuture;
     }
+
+    public CompletableFuture<Boolean> getStopListCheckAsync(ClientSpecification currentClientSpec) {
+        return CompletableFuture
+                .supplyAsync(() -> currentClientSpec.age > 24);
+    }
+
 
     public Boolean checkForFraud(ClientSpecification spec) {
         ClientFraundCheckDTO clientDTO = new ClientFraundCheckDTO(spec.firstName, spec.lastName, spec.passportNumber, spec.age);
         return antiFraudService.isFraud(clientDTO);
     }
 
-    public CreditHistory getCreditHistory(ClientSpecification spec) {
-        return creditBureau.getCreditHistory(new PersonDTO(spec.firstName, spec.lastName, spec.age));
+    public CompletableFuture<CreditHistory> getCreditHistoryAsync(ClientSpecification spec) {
+
+        return CompletableFuture.supplyAsync(() -> creditBureau.getCreditHistory(new PersonDTO(spec.firstName, spec.lastName, spec.age)));
     }
 
-    public Boolean checkInSB(ClientSpecification spec, CreditHistory creditHistory) {
-        return true;
+    public CompletableFuture<Boolean> checkInSBAsync(ClientSpecification spec, CreditHistory creditHistory) {
+        return CompletableFuture.completedFuture(true);
+    }
+
+    public CompletableFuture<Boolean> getAntifraudCheckAsync(ClientSpecification currentClientSpec) {
+        //todo DTO from ClientSpec
+        return CompletableFuture.supplyAsync(() -> antiFraudService.isFraud(null));
     }
 }
