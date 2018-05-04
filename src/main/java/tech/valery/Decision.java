@@ -8,4 +8,8 @@ public class Decision {
         this.clientRequest = clientRequest;
         this.isPositiveDecision = isPositiveDecision;
     }
+
+    public boolean isPositiveDecision() {
+        return isPositiveDecision;
+    }
 }

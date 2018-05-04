@@ -35,8 +35,6 @@ public class Office {
             Decision decision = decisionFuture.get();
             processedRequests.add(clientRequest);
 
-
-
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
