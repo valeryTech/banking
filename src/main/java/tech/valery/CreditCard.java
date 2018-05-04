@@ -7,7 +7,9 @@ public class CreditCard {
     private BigDecimal currentMoneyAmount;
     private BigDecimal percents;
 
-    public CreditCard(int clientId) {
+    public CreditCard(int clientId, BigDecimal currentMoneyAmount, BigDecimal percents) {
         this.clientId = clientId;
+        this.currentMoneyAmount = currentMoneyAmount;
+        this.percents = percents;
     }
 }
