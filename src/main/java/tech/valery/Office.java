@@ -12,6 +12,7 @@ import java.util.concurrent.Future;
 public class Office {
 
     private final List<ClientRequest> processedRequests = new ArrayList<>();
+    private final List<CreditCard> creditCards = new ArrayList<>();
 
     private final ExecutorService fixedThreadPool;
 
@@ -33,6 +34,9 @@ public class Office {
         try {
             Decision decision = decisionFuture.get();
             processedRequests.add(clientRequest);
+
+
+
         } catch (InterruptedException | ExecutionException e) {
             e.printStackTrace();
         }
