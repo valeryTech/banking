@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.assertj.core.api.AssertionsForClassTypes.doesNotHave;
 
 public class ConcurrentClientRepositoryTest {
 
@@ -31,6 +30,6 @@ public class ConcurrentClientRepositoryTest {
         clientRepository.registerClient(new Client("Johny", "Hue", 21, "2200 0010"));
 
 
-        Assertions.assertTrue(clientRepository.getClient(cs23) != null);
+        Assertions.assertNotNull(clientRepository.getClient(cs23));
     }
 }

@@ -1,10 +1,3 @@
-/**
- * Source code from: https://github.com/junit-team/junit5-samples/blob/r5.1.0/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java
- *
- * Mockito issue: https://github.com/mockito/mockito/issues/1348
- */
-
-
 package tech.valery.extentions;
 
 import static org.mockito.Mockito.mock;
@@ -21,6 +14,9 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
 /**
+ * Source code from: https://github.com/junit-team/junit5-samples/blob/r5.1.0/junit5-mockito-extension/src/main/java/com/example/mockito/MockitoExtension.java
+ *
+ * Mockito issue: https://github.com/mockito/mockito/issues/1348
  * {@code MockitoExtension} showcases the {@link TestInstancePostProcessor}
  * and {@link ParameterResolver} extension APIs of JUnit 5 by providing
  * dependency injection support at the field level and at the method parameter

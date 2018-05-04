@@ -42,7 +42,7 @@ public class RequestExecutor implements Callable<Decision> {
                 .completeOnTimeout(false, MAX_TIMEOUT, TimeUnit.MILLISECONDS);
 
         CompletableFuture<Boolean> antiFroudCheckFuture = bankSystem.getAntifraudCheckAsync(currentClientSpec)
-                .completeOnTimeout(false, MAX_TIMEOUT, TimeUnit.MILLISECONDS);;
+                .completeOnTimeout(false, MAX_TIMEOUT, TimeUnit.MILLISECONDS);
 
         Boolean toContinue = !doublesCheckFuture.join() && stopListCheckFuture.join();
 
@@ -77,7 +77,7 @@ public class RequestExecutor implements Callable<Decision> {
     }
 
     @Override
-    public Decision call() throws Exception {
+    public Decision call() {
         return handleCreditCardRequest();
     }
 }

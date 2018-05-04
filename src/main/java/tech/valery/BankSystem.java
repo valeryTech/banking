@@ -4,8 +4,6 @@ import tech.valery.participants.*;
 
 import java.util.concurrent.CompletableFuture;
 
-import static org.mockito.Mockito.mock;
-
 public class BankSystem {
 
     public static final int MAX_TIMEOUT = 1000;

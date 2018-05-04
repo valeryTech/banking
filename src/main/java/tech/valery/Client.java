@@ -1,13 +1,12 @@
 package tech.valery;
 
-import java.util.Date;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class Client {
 
     private static final AtomicInteger idCounter = new AtomicInteger();
 
-    private int id;
+    private final int id;
 
     public Client(ClientSpecification spec) {
         this.firstName = spec.firstName;
@@ -22,10 +21,10 @@ public class Client {
         return id;
     }
 
-    private String firstName;
-    private String lastName;
+    private final String firstName;
+    private final String lastName;
 
-    private int age;
+    private final int age;
 
     private final String passportNumber;
 

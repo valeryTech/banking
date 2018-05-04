@@ -1,7 +1,5 @@
 package tech.valery;
 
-import java.util.Date;
-import java.util.Map;
 import java.util.function.BiFunction;
 
 public class ClientSpecification {
