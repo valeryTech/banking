@@ -10,30 +10,29 @@ public class BankSystem {
 
     public static final boolean NEGATIVE_DOUBLE_CHECK_ANSWER = true;
 
-    private final ClientRepository dataProvider;
+    private final ClientRepository clientProvider;
     private final AntiFraudService antiFraudService;
     private final CreditBureau creditBureau;
 
     public void registerClient(Client client) {
-        dataProvider.registerClient(client);
+        clientProvider.registerClient(client);
     }
 
-    public BankSystem(ClientRepository dataProvider, AntiFraudService antiFraudService, CreditBureau creditBureau) {
-        this.dataProvider = dataProvider;
+    public BankSystem(ClientRepository clientProvider, AntiFraudService antiFraudService, CreditBureau creditBureau) {
+        this.clientProvider = clientProvider;
         this.antiFraudService = antiFraudService;
         this.creditBureau = creditBureau;
     }
 
     public Client findClient(int id) {
-        return dataProvider.getClient(id);
+        return clientProvider.getClient(id);
     }
 
     public Client findClient(ClientSpecification clientSpecification) {
-        return dataProvider.getClient(clientSpecification);
+        return clientProvider.getClient(clientSpecification);
     }
 
     public boolean isClientAlreadyInBase(ClientSpecification clientSpecification) {
-        //todo
         return findClient(clientSpecification) != null;
     }
 
@@ -73,8 +72,8 @@ public class BankSystem {
         return CompletableFuture.completedFuture(true);
     }
 
-    public CompletableFuture<Boolean> getAntifraudCheckAsync(ClientSpecification currentClientSpec) {
-        //todo DTO from ClientSpec
-        return CompletableFuture.supplyAsync(() -> antiFraudService.isFraud(null));
+    public CompletableFuture<Boolean> getAntifraudCheckAsync(ClientSpecification spec) {
+        ClientFraundCheckDTO dto = new ClientFraundCheckDTO(spec.firstName, spec.lastName, spec.passportNumber, spec.age);
+        return CompletableFuture.supplyAsync(() -> antiFraudService.isFraud(dto));
     }
 }
